@@ -6,7 +6,7 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 14:01:21 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/19 11:30:46 by cben-bar         ###   ########lyon.fr   */
+/*   Updated: 2022/07/19 14:59:49 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,9 @@ int				supp_empty_node(t_control_parse *parsing);
 char			*ft_itoa(int n);
 void			re_flaggeur(t_control_parse *parsing);
 int				ident_cmd(char *s);
+size_t			cpy_value(char *s, t_var *var, size_t dellen, char *dst);
+char			*find_name(char *s, size_t dellen, size_t i, size_t j);
+t_bool			in_charset(char c);
 
 /* ****************************************************************************
 ----------------------------INCLUDES FUNCTIONS LST----------------------------

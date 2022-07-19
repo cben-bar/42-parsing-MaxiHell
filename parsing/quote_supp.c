@@ -6,21 +6,17 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 01:44:14 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/19 11:37:40 by cben-bar         ###   ########lyon.fr   */
+/*   Updated: 2022/07/19 16:06:10 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	cut_quote(t_parse *node, int nb_q)
+int	cut_quote(t_parse *node, int nb_q, size_t i, size_t j)
 {
 	char	*new;
-	size_t	i;
-	size_t	j;
 	int		q;
 
-	i = 0;
-	j = 0;
 	q = 0;
 	new = malloc(sizeof(char) * (ft_strlen(node->elem) - nb_q + 1));
 	if (!new)
@@ -42,7 +38,7 @@ int	cut_quote(t_parse *node, int nb_q)
 	new[j] = '\0';
 	free(node->elem);
 	node->elem = new;
-	return (1);
+	return (true);
 }
 
 int	there_is_quote(char *s)
@@ -70,19 +66,23 @@ int	quote_supp(t_control_parse *parsing)
 {
 	char	*s;
 	int		nb_q;
+	size_t	i;
+	size_t	j;
 
 	parsing->iter = parsing->first;
 	while (parsing->iter)
 	{
 		s = parsing->iter->elem;
 		nb_q = there_is_quote(s);
+		i = 0;
+		j = 0;
 		if (nb_q)
 		{
-			if (!cut_quote(parsing->iter, nb_q))
-				return (0);
+			if (!cut_quote(parsing->iter, nb_q, i, j))
+				return (false);
 		}
 		else
 			parsing->iter = parsing->iter->next;
 	}
-	return (1);
+	return (true);
 }

@@ -33,6 +33,7 @@
 #include	"ft_strcpy.c"
 #include	"ft_strjoin.c"
 #include	"dollar.c"
+#include	"dollar_2.c"
 #include	"supp_empty_node.c"
 #include	"ft_itoa.c"
 #include	"re_flaggeur.c"

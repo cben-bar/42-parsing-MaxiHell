@@ -6,11 +6,18 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:55:51 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/08 18:25:31 by cben-bar         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:13:22 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_control_parse	*split_block_2(t_control_parse *new_lst, char **tab)
+{
+	new_lst->iter = init_parse(ft_strdup(tab[0]), 0);
+	new_lst->iter->next = 0;
+	return (new_lst);
+}
 
 t_control_parse	*split_block(char *elem, int x)
 {
@@ -28,11 +35,7 @@ t_control_parse	*split_block(char *elem, int x)
 	while (tab[i])
 		i++;
 	if (i == 1)
-	{
-		new_lst->iter = init_parse(ft_strdup(tab[0]), 0);
-		new_lst->iter->next = 0;
-		return (new_lst);
-	}
+		return (split_block_2(new_lst, tab));
 	i = 0;
 	while (tab[i])
 	{

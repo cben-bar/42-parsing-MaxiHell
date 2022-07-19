@@ -6,7 +6,7 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:36:27 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/19 11:37:45 by cben-bar         ###   ########lyon.fr   */
+/*   Updated: 2022/07/19 16:54:42 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,8 @@ void	replace_node(t_parse *node)
 	node->flag = PARSE_ERROR;
 }
 
-int	check_multi_node_chev(t_control_parse *parsing)
+void	check_multi_node_chev_2(t_control_parse *parsing, t_control_parse *cpy)
 {
-	t_control_parse	*cpy;
-
-	cpy = malloc(sizeof(t_control_parse));
-	if (!cpy)
-		return (false);
-	cpy->iter = parsing->iter->next;
 	while (cpy->iter)
 	{
 		if (parsing->iter->flag == REDIR_IN_FLAG
@@ -51,9 +45,21 @@ int	check_multi_node_chev(t_control_parse *parsing)
 				break ;
 			}
 		}
-			cpy->iter = cpy->iter->next;
-			parsing->iter = parsing->iter->next;
+		cpy->iter = cpy->iter->next;
+		parsing->iter = parsing->iter->next;
 	}
+}
+
+int	check_multi_node_chev(t_control_parse *parsing)
+{
+	t_control_parse	*cpy;
+
+	cpy = malloc(sizeof(t_control_parse));
+	if (!cpy)
+		return (false);
+	parsing->iter = parsing->first;
+	cpy->iter = parsing->iter->next;
+	check_multi_node_chev_2(parsing, cpy);
 	free(cpy);
 	return (true);
 }

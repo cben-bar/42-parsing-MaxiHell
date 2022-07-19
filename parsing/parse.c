@@ -6,7 +6,7 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:42:39 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/19 11:37:37 by cben-bar         ###   ########lyon.fr   */
+/*   Updated: 2022/07/19 16:49:42 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ t_control_parse	*parse(t_control_parse *parsing, size_t x, char **env)
 	if (!check_no_file_name(replace))
 		return (NULL);
 	supp_empty_node(replace);
-	quote_supp(replace);
+	if (!quote_supp(replace))
+		return (NULL);
 	re_flaggeur(replace);
 	cleaner(parsing);
 	return (replace);

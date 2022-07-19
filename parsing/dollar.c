@@ -6,7 +6,7 @@
 /*   By: cben-bar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 16:17:02 by cben-bar          #+#    #+#             */
-/*   Updated: 2022/07/08 23:50:47 by cben-bar         ###   ########lyon.fr   */
+/*   Updated: 2022/07/19 15:33:35 by cben-bar         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,12 @@ t_bool	in_charset(char c)
 	return (false);
 }
 
-char	*find_name(char *s, size_t dellen)
+char	*find_name(char *s, size_t dellen, size_t i, size_t j)
 {
 	char	*varname;
-	size_t	i;
-	size_t	j;
 	int		q;
 
 	varname = malloc(sizeof(char) * dellen);
-	i = 0;
-	j = 0;
 	q = 0;
 	while (s[i] && j == 0)
 	{
@@ -68,7 +64,6 @@ int	search_value(char *varname, t_var *var)
 	start = var;
 	if (ft_strcmp(varname, "?") == 0)
 		return (2);
-
 	while (var)
 	{
 		if (ft_strcmp(varname, var->varname) == 0)
@@ -79,34 +74,38 @@ int	search_value(char *varname, t_var *var)
 	return (0);
 }
 
+size_t	cpy_value_2(char *dst, char *value, size_t i)
+{
+	while (value[i])
+	{
+		dst[i] = value[i];
+		i++;
+	}
+	return (i);
+}
+
 size_t	cpy_value(char *s, t_var *var, size_t dellen, char *dst)
 {
 	size_t	i;
+	size_t	j;
 	char	*varname;
 	t_var	*start;
 	char	*itoa_g_status;
 
 	start = var;
 	i = 0;
-	varname = find_name(s, dellen);
+	j = 0;
+	varname = find_name(s, dellen, i, j);
 	if (search_value(varname, var) == 2)
 	{
 		itoa_g_status = ft_itoa(g_status);
-		while (itoa_g_status[i])
-		{
-			dst[i] = itoa_g_status[i];
-			i++;
-		}
+		i = cpy_value_2(dst, itoa_g_status, i);
 		free(itoa_g_status);
 	}
 	else if (search_value(varname, var) == 1)
 	{
 		var = node_env(varname, var);
-		while (var->value[i])
-		{
-			dst[i] = var->value[i];
-			i++;
-		}
+		i = cpy_value_2(dst, var->value, i);
 	}
 	var = start;
 	free(varname);
@@ -177,24 +176,26 @@ size_t	findaddlen(char *s, size_t dellen, t_var *var)
 	char	*varname;
 	size_t	addlen;
 	t_var	*start;
+	size_t	i;
+	size_t	j;
 
 	start = var;
 	addlen = 0;
-	varname = find_name(s, dellen);
+	i = 0;
+	j = 0;
+	varname = find_name(s, dellen, i, j);
 	addlen = ft_find_value(varname, var);
 	free(varname);
 	var = start;
 	return (addlen);
 }
 
-size_t	finddellen(char *s)
+size_t	finddellen(char *s, size_t i)
 {
-	size_t	i;
 	size_t	j;
 	int		q;
 	size_t	del;
 
-	i = 0;
 	j = 0;
 	q = 0;
 	while (s[i])
@@ -221,17 +222,19 @@ int	ft_alloc(t_parse *node, t_var *var)
 {
 	size_t	delen;
 	size_t	addlen;
-	char	*final_s;
+	char	*s;
+	size_t	i;
 
-	delen = finddellen(node->elem);
+	i = 0;
+	delen = finddellen(node->elem, i);
 	addlen = findaddlen(node->elem, delen, var);
-	final_s = malloc(sizeof(char) * (ft_strlen(node->elem) + addlen - delen + 1));
-	if (!final_s)
-		return (0);
-	sub_it(final_s, node, var, delen);
+	s = malloc(sizeof(char) * (ft_strlen(node->elem) + addlen - delen + 1));
+	if (!s)
+		return (false);
+	sub_it(s, node, var, delen);
 	free(node->elem);
-	node->elem = final_s;
-	return (1);
+	node->elem = s;
+	return (true);
 }
 
 t_bool	there_is_doll(char *s)
@@ -262,11 +265,11 @@ int	dollar(t_control_parse *parsing, char **env)
 		if (there_is_doll(parsing->iter->elem))
 		{
 			if (!ft_alloc(parsing->iter, var))
-				return (0);
+				return (false);
 		}
 		else
 			parsing->iter = parsing->iter->next;
 	}
 	var_clear(var);
-	return (1);
+	return (true);
 }
