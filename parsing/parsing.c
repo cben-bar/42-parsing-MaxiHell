@@ -25,7 +25,7 @@ t_control_parse	*parsing(char *line, char **envp)
 	if (first_check(line))
 	{
 		line_tab = ft_split(line, '|', i, q);
-		parsing = set_pars(parsing, line_tab);
+		parsing = set_pars(parsing, line_tab, envp);
 		if (!printer_error(parsing))
 		{
 			cleaner(parsing);
